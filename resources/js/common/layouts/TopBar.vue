@@ -1,86 +1,109 @@
 <template>
-    <a-layout-header :style="{
-        padding: '0 16px',
-        background: 'white',
-        display: 'flex',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-        overflowX: 'auto',
-    }">
-        <a-row style="width: 100%" align="middle" justify="space-between">
-            <!-- Left (Menu icon) -->
-            <a-col :xs="6" :sm="4" :md="4" :lg="4">
-                <a-space>
-                    <MenuOutlined class="trigger" @click="showHideMenu" />
-                </a-space>
-            </a-col>
+   <a-layout-header
+  :style="{
+    padding: '0 16px',
+    background: 'white',
+    display: 'flex',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    overflowX: 'auto',
+  }"
+>
+  <a-row style="width: 100%" align="middle" justify="space-between">
+    <!-- Left (Menu icon) -->
+    <a-col :xs="24" :sm="24" :md="4" :lg="4">
+      <a-space>
+        <MenuOutlined class="trigger" @click="showHideMenu" />
+      </a-space>
+    </a-col>
 
-            <!-- Right (Icons, dropdowns, etc.) -->
-            <a-col :xs="18" :sm="20" :md="20" :lg="20">
-                <HeaderRightIcons>
-                    <a-space wrap>
-                        <!-- App Module Icons (Desktop only) -->
-                        <template v-if="innerWidth > 768">
-                            <component v-for="(appModule, index) in appModules" :key="index"
-                                v-bind:is="appModule + 'TopbarIcon'" />
-                        </template>
+    <!-- Right (Icons, dropdowns, etc.) -->
+    <a-col :xs="24" :sm="24" :md="20" :lg="20">
+      <HeaderRightIcons>
+        <a-space wrap>
+          <!-- App Module Icons (Desktop only) -->
+          <template v-if="innerWidth > 768">
+            <component
+              v-for="(appModule, index) in appModules"
+              :key="index"
+              v-bind:is="appModule + 'TopbarIcon'"
+            />
+          </template>
 
-                        <!-- Static topbar icon (Desktop only) -->
-                        <TopbarIconVue v-if="innerWidth > 768" />
+          <!-- Static topbar icon (Desktop only) -->
+          <TopbarIconVue v-if="innerWidth > 768" />
 
-                        <!-- POS Button -->
-                        <template v-if="
-                            innerWidth > 768 &&
-                            (permsArray.includes('pos_view') || permsArray.includes('admin')) &&
-                            willSubscriptionModuleVisible('pos')
-                        ">
-                            <a-button type="link" @click="$router.push({ name: 'admin.pos.index' })">
-                                <ShoppingCartOutlined />
-                                <span>{{ $t('menu.pos') }}</span>
-                            </a-button>
-                            <a-divider type="vertical" />
-                        </template>
+          <!-- POS Button -->
+          <template
+            v-if="
+              innerWidth > 768 &&
+              (permsArray.includes('pos_view') || permsArray.includes('admin')) &&
+              willSubscriptionModuleVisible('pos')
+            "
+          >
+            <a-button
+              type="link"
+              @click="$router.push({ name: 'admin.pos.index' })"
+            >
+              <ShoppingCartOutlined />
+              <span>{{ $t('menu.pos') }}</span>
+            </a-button>
+            <a-divider type="vertical" />
+          </template>
 
-                        <!-- Warehouse + Shortcut -->
-                        <template v-if="selectedWarehouse && selectedWarehouse.name">
-                            <template v-if="appSetting.shortcut_menus !== 'bottom'">
-                                <AffixButton position="top" />
-                                <a-divider type="vertical" />
-                            </template>
-                            <ChangeWarehouse />
-                            <a-divider type="vertical" />
-                        </template>
+          <!-- Warehouse + Shortcut -->
+          <template v-if="selectedWarehouse && selectedWarehouse.name">
+            <template v-if="appSetting.shortcut_menus !== 'bottom'">
+              <AffixButton position="top" />
+              <a-divider type="vertical" />
+            </template>
+            <ChangeWarehouse />
+            <a-divider type="vertical" />
+          </template>
 
-                        <!-- Language Switcher -->
-                        <a-dropdown :placement="appSetting.rtl ? 'bottomLeft' : 'bottomRight'">
-                            <a class="ant-dropdown-link" @click.prevent>
-                                {{ selectedLang }}
-                                <DownOutlined />
-                            </a>
-                            <template #overlay>
-                                <a-menu>
-                                    <a-menu-item v-for="lang in langs" :key="lang.key" @click="langSelected(lang.key)">
-                                        <a-space>
-                                            <a-avatar shape="square" size="small" :src="lang.image_url" />
-                                            {{ lang.name }}
-                                        </a-space>
-                                    </a-menu-item>
-                                </a-menu>
-                            </template>
-                        </a-dropdown>
+          <!-- Language Switcher -->
+          <a-dropdown
+            :placement="appSetting.rtl ? 'bottomLeft' : 'bottomRight'"
+          >
+            <a class="ant-dropdown-link" @click.prevent>
+              {{ selectedLang }}
+              <DownOutlined />
+            </a>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item
+                  v-for="lang in langs"
+                  :key="lang.key"
+                  @click="langSelected(lang.key)"
+                >
+                  <a-space>
+                    <a-avatar
+                      shape="square"
+                      size="small"
+                      :src="lang.image_url"
+                    />
+                    {{ lang.name }}
+                  </a-space>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
 
-                        <a-divider type="vertical" />
+          <a-divider type="vertical" />
 
-                        <!-- Profile Icon -->
-                        <a-button type="link" @click="$router.push({ name: 'admin.settings.profile.index' })"
-                            class="p-0">
-                            <a-avatar size="small" :src="user.profile_image_url" />
-                        </a-button>
-                    </a-space>
-                </HeaderRightIcons>
-            </a-col>
-        </a-row>
-    </a-layout-header>
+          <!-- Profile Icon -->
+          <a-button
+            type="link"
+            @click="$router.push({ name: 'admin.settings.profile.index' })"
+            class="p-0"
+          >
+            <a-avatar size="small" :src="user.profile_image_url" />
+          </a-button>
+        </a-space>
+      </HeaderRightIcons>
+    </a-col>
+  </a-row>
+</a-layout-header>
 
 </template>
 
