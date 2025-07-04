@@ -10,6 +10,8 @@ class LangTrans
 {
     public static $mainTranslations = [
         'common' => [
+            'fullscreen' => 'Fullscreen',
+            'exit_fullscreen' => 'Exit Fullscreen',
             'enabled' => 'Enabled',
             'disabled' => 'Disabled',
             'id' => 'Id',

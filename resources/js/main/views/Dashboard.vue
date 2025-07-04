@@ -64,73 +64,73 @@
         <div class="mt-30 mb-20">
             <a-row :gutter="[15, 15]">
                 <a-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-                    <StateWidget>
+                    <StateWidget :bgColor="'#28a745'" :bgOuterColor="'#60EA87'">
                         <template #image>
                             <LineChartOutlined style="color: #fff; font-size: 24px" />
                         </template>
                         <template #description>
-                            <h2 v-if="responseData.stateData">
+                            <h2 v-if="responseData.stateData" :style="{ color: '#FFFFFF' }">
                                 {{
                                     formatAmountCurrency(
                                         responseData.stateData.totalSales
                                     )
                                 }}
                             </h2>
-                            <p>{{ $t("dashboard.total_sales") }}</p>
+                            <p :style="{ color: '#FFFFFF' }">{{ $t("dashboard.total_sales") }}</p>
                         </template>
                     </StateWidget>
                 </a-col>
 
                 <a-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-                    <StateWidget>
+                    <StateWidget :bgColor="'#007bff'" :bgOuterColor="'#2567B0'">
                         <template #image>
                             <ShoppingOutlined style="color: #b4dfed; font-size: 24px" />
                         </template>
                         <template #description>
-                            <h2 v-if="responseData.stateData">
+                            <h2 v-if="responseData.stateData" :style="{ color: '#FFFFFF' }">
                                 {{
                                     formatAmountCurrency(
                                         responseData.stateData.totalExpenses
                                     )
                                 }}
                             </h2>
-                            <p>{{ $t("dashboard.total_expenses") }}</p>
+                            <p :style="{ color: '#FFFFFF' }">{{ $t("dashboard.total_expenses") }}</p>
                         </template>
                     </StateWidget>
                 </a-col>
 
                 <a-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-                    <StateWidget>
+                    <StateWidget :bgColor="'#ffc107'" :bgOuterColor="'#DFBF54'">
                         <template #image>
                             <TagOutlined style="color: #edecb4; font-size: 24px" />
                         </template>
                         <template #description>
-                            <h2 v-if="responseData.stateData">
+                            <h2 v-if="responseData.stateData" :style="{ color: '#FFFFFF' }">
                                 {{
                                     formatAmountCurrency(
                                         responseData.stateData.paymentSent
                                     )
                                 }}
                             </h2>
-                            <p>{{ $t("dashboard.payment_sent") }}</p>
+                            <p :style="{ color: '#FFFFFF' }">{{ $t("dashboard.payment_sent") }}</p>
                         </template>
                     </StateWidget>
                 </a-col>
 
                 <a-col :xs="24" :sm="24" :md="12" :lg="6" :xl="6">
-                    <StateWidget>
+                    <StateWidget :bgColor="'#FF1414'" :bgOuterColor="'#FF5656'">
                         <template #image>
                             <BankOutlined style="color: #93f584; font-size: 24px" />
                         </template>
                         <template #description>
-                            <h2 v-if="responseData.stateData">
+                            <h2 v-if="responseData.stateData" :style="{ color: '#FFFFFF' }">
                                 {{
                                     formatAmountCurrency(
                                         responseData.stateData.paymentReceived
                                     )
                                 }}
                             </h2>
-                            <p>{{ $t("dashboard.payment_received") }}</p>
+                            <p :style="{ color: '#FFFFFF' }">{{ $t("dashboard.payment_received") }}</p>
                         </template>
                     </StateWidget>
                 </a-col>

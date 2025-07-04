@@ -1,6 +1,6 @@
 <template>
-    <a-card :bordered="false">
-        <figure class="custom-card-widget">
+    <a-card :bordered="false" :style="{ background: bgOuterColor }">
+        <figure class="custom-card-widget" >
             <a-space>
                 <div class="custom-card-widget-icon" :style="{ background: bgColor }">
                     <slot name="image"></slot>
@@ -17,8 +17,13 @@
 export default {
     props: {
         bgColor: {
+            type: String,
             default: "#5F63F2",
         },
-    },
+        bgOuterColor: {
+            type: String,
+            default: "#FFFFFF",
+        }
+    }
 };
 </script>

@@ -1,30 +1,24 @@
 <template>
-    <a-card
-        class="page-content-sub-header breadcrumb-left-border"
-        :bodyStyle="{ padding: '0px', margin: '0px 16px 0' }"
-    >
+    <a-card class="page-content-sub-header breadcrumb-left-border"
+        :bodyStyle="{ padding: '0px', margin: '0px 16px 0' }">
         <a-row>
             <a-col :span="24">
-                <a-page-header
-                    :title="$t('menu.pos')"
-                    @back="() => $router.go(-1)"
-                    class="p-0"
-                >
+                <a-page-header :title="$t('menu.pos')" @back="() => $router.go(-1)" class="p-0">
+                    <template #extra>
+                        <a-button type="primary" @click="toggleFullscreen">
+                            <template #icon>
+                                <FullscreenOutlined v-if="!isFullscreen" />
+                                <FullscreenExitOutlined v-else />
+                            </template>
+                            {{ isFullscreen ? ' Exit Fullscreen' : ' Fullscreen' }}
+                        </a-button>
+                    </template>
                     <template v-if="innerWidth <= 768" #extra>
                         <span style="display: flex">
-                            <a-select
-                                v-model:value="formData.user_id"
-                                :placeholder="$t('user.walk_in_customer')"
-                                style="width: 100%"
-                                optionFilterProp="title"
-                                show-search
-                            >
-                                <a-select-option
-                                    v-for="customer in customers"
-                                    :key="customer.xid"
-                                    :title="customer.name"
-                                    :value="customer.xid"
-                                >
+                            <a-select v-model:value="formData.user_id" :placeholder="$t('user.walk_in_customer')"
+                                style="width: 100%" optionFilterProp="title" show-search>
+                                <a-select-option v-for="customer in customers" :key="customer.xid"
+                                    :title="customer.name" :value="customer.xid">
                                     {{ customer.name }}
                                     <span v-if="customer.phone && customer.phone != ''">
                                         <br />
@@ -41,12 +35,7 @@
     </a-card>
 
     <a-form layout="vertical">
-        <a-row
-            v-if="innerWidth >= 768"
-            :gutter="[8, 8]"
-            class="mt-5"
-            style="margin: 10px 16px 0"
-        >
+        <a-row v-if="innerWidth >= 768" :gutter="[8, 8]" class="mt-5" style="margin: 10px 16px 0">
             <a-col :xs="24" :sm="24" :md="24" :lg="10" :xl="10">
                 <div class="pos-left-wrapper">
                     <div class="pos-left-header">
@@ -55,79 +44,46 @@
                                 <a-row :gutter="16">
                                     <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                                         <span style="display: flex">
-                                            <a-select
-                                                v-model:value="formData.user_id"
-                                                :placeholder="$t('user.walk_in_customer')"
-                                                style="width: 100%"
-                                                optionFilterProp="title"
-                                                show-search
-                                            >
-                                                <a-select-option
-                                                    v-for="customer in customers"
-                                                    :key="customer.xid"
-                                                    :title="customer.name"
-                                                    :value="customer.xid"
-                                                >
+                                            <a-select v-model:value="formData.user_id"
+                                                :placeholder="$t('user.walk_in_customer')" style="width: 100%"
+                                                optionFilterProp="title" show-search>
+                                                <a-select-option v-for="customer in customers" :key="customer.xid"
+                                                    :title="customer.name" :value="customer.xid">
                                                     {{ customer.name }}
-                                                    <span
-                                                        v-if="
-                                                            customer.phone &&
-                                                            customer.phone != ''
-                                                        "
-                                                    >
+                                                    <span v-if="
+                                                        customer.phone &&
+                                                        customer.phone != ''
+                                                    ">
                                                         <br />
                                                         {{ customer.phone }}
                                                     </span>
                                                 </a-select-option>
                                             </a-select>
-                                            <CustomerAddButton
-                                                @onAddSuccess="customerAdded"
-                                            />
+                                            <CustomerAddButton @onAddSuccess="customerAdded" />
                                         </span>
                                     </a-col>
                                 </a-row>
                                 <a-row class="mt-20 mb-30">
                                     <a-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
                                         <span style="display: flex">
-                                            <a-select
-                                                :value="null"
-                                                :searchValue="orderSearchTerm"
-                                                show-search
-                                                :filter-option="false"
-                                                :placeholder="
-                                                    $t('product.search_scan_product')
-                                                "
-                                                style="width: 100%"
-                                                :not-found-content="
-                                                    productFetching ? undefined : null
-                                                "
-                                                @search="
-                                                    (searchedValue) => {
-                                                        orderSearchTerm = searchedValue;
-                                                        fetchProducts(searchedValue);
-                                                    }
-                                                "
-                                                option-label-prop="label"
-                                                @focus="products = []"
-                                                @select="searchValueSelected"
-                                                @inputKeyDown="inputValueChanged"
-                                            >
+                                            <a-select :value="null" :searchValue="orderSearchTerm" show-search
+                                                :filter-option="false" :placeholder="$t('product.search_scan_product')
+                                                    " style="width: 100%" :not-found-content="productFetching ? undefined : null
+                                                        " @search="
+                                                        (searchedValue) => {
+                                                            orderSearchTerm = searchedValue;
+                                                            fetchProducts(searchedValue);
+                                                        }
+                                                    " option-label-prop="label" @focus="products = []"
+                                                @select="searchValueSelected" @inputKeyDown="inputValueChanged">
                                                 <template #suffixIcon>
                                                     <SearchOutlined />
                                                 </template>
-                                                <template
-                                                    v-if="productFetching"
-                                                    #notFoundContent
-                                                >
+                                                <template v-if="productFetching" #notFoundContent>
                                                     <a-spin size="small" />
                                                 </template>
-                                                <a-select-option
-                                                    v-for="product in products"
-                                                    :key="product.xid"
-                                                    :value="product.xid"
-                                                    :label="product.name"
-                                                    :product="product"
-                                                >
+                                                <a-select-option v-for="product in products" :key="product.xid"
+                                                    :value="product.xid" :label="product.name" :product="product">
                                                     => {{ product.name }}
                                                 </a-select-option>
                                             </a-select>
@@ -138,32 +94,20 @@
                         </a-card>
                     </div>
                     <div class="pos-left-content">
-                        <a-card
-                            class="left-pos-middle-table"
-                            :style="{ marginBottom: '10px' }"
-                        >
+                        <a-card class="left-pos-middle-table" :style="{ marginBottom: '10px' }">
                             <div class="bill-body">
                                 <div class="bill-table">
                                     <a-row class="mt-20 mb-30">
                                         <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                            <a-table
-                                                :row-key="(record) => record.xid"
-                                                :dataSource="selectedProducts"
-                                                :columns="orderItemColumns"
-                                                :pagination="false"
-                                                size="middle"
-                                            >
+                                            <a-table :row-key="(record) => record.xid" :dataSource="selectedProducts"
+                                                :columns="orderItemColumns" :pagination="false" size="middle">
                                                 <template #bodyCell="{ column, record }">
-                                                    <template
-                                                        v-if="column.dataIndex === 'name'"
-                                                    >
+                                                    <template v-if="column.dataIndex === 'name'">
                                                         {{ record.name }} <br />
-                                                        <small
-                                                            v-if="
-                                                                record.product_type !=
-                                                                'service'
-                                                            "
-                                                        >
+                                                        <small v-if="
+                                                            record.product_type !=
+                                                            'service'
+                                                        ">
                                                             <a-typography-text code>
                                                                 {{
                                                                     $t("product.avl_qty")
@@ -174,65 +118,45 @@
                                                             </a-typography-text>
                                                         </small>
                                                     </template>
-                                                    <template
-                                                        v-if="
-                                                            column.dataIndex ===
-                                                            'unit_quantity'
-                                                        "
-                                                    >
-                                                        <a-input-number
-                                                            id="inputNumber"
-                                                            v-model:value="
-                                                                record.quantity
-                                                            "
-                                                            :min="0"
-                                                            @change="
+                                                    <template v-if="
+                                                        column.dataIndex ===
+                                                        'unit_quantity'
+                                                    ">
+                                                        <a-input-number id="inputNumber" v-model:value="record.quantity
+                                                            " :min="0" @change="
                                                                 quantityChanged(record)
-                                                            "
-                                                        />
+                                                                " />
                                                     </template>
-                                                    <template
-                                                        v-if="
-                                                            column.dataIndex ===
-                                                            'subtotal'
-                                                        "
-                                                    >
+                                                    <template v-if="
+                                                        column.dataIndex ===
+                                                        'subtotal'
+                                                    ">
                                                         {{
                                                             formatAmountCurrency(
                                                                 record.subtotal
                                                             )
                                                         }}
                                                     </template>
-                                                    <template
-                                                        v-if="
-                                                            column.dataIndex === 'action'
-                                                        "
-                                                    >
-                                                        <a-button
-                                                            type="primary"
-                                                            @click="editItem(record)"
-                                                            style="
+                                                    <template v-if="
+                                                        column.dataIndex === 'action'
+                                                    ">
+                                                        <a-button type="primary" @click="editItem(record)" style="
                                                                 margin-left: 4px;
                                                                 margin-top: 4px;
-                                                            "
-                                                        >
-                                                            <template #icon
-                                                                ><EditOutlined
-                                                            /></template>
+                                                            ">
+                                                            <template #icon>
+                                                                <EditOutlined />
+                                                            </template>
                                                         </a-button>
-                                                        <a-button
-                                                            type="primary"
-                                                            @click="
-                                                                showDeleteConfirm(record)
-                                                            "
-                                                            style="
+                                                        <a-button type="primary" @click="
+                                                            showDeleteConfirm(record)
+                                                            " style="
                                                                 margin-left: 4px;
                                                                 margin-top: 4px;
-                                                            "
-                                                        >
-                                                            <template #icon
-                                                                ><DeleteOutlined
-                                                            /></template>
+                                                            ">
+                                                            <template #icon>
+                                                                <DeleteOutlined />
+                                                            </template>
                                                         </a-button>
                                                     </template>
                                                 </template>
@@ -249,23 +173,12 @@
                                 <a-row :gutter="[16, 16]">
                                     <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
                                         <a-form-item :label="$t('stock.order_tax')">
-                                            <a-select
-                                                v-model:value="formData.tax_id"
-                                                :placeholder="
-                                                    $t('common.select_default_text', [
-                                                        $t('stock.order_tax'),
-                                                    ])
-                                                "
-                                                :allowClear="true"
-                                                style="width: 100%"
-                                                @change="taxChanged"
-                                            >
-                                                <a-select-option
-                                                    v-for="tax in taxes"
-                                                    :key="tax.xid"
-                                                    :value="tax.xid"
-                                                    :tax="tax"
-                                                >
+                                            <a-select v-model:value="formData.tax_id" :placeholder="$t('common.select_default_text', [
+                                                $t('stock.order_tax'),
+                                            ])
+                                                " :allowClear="true" style="width: 100%" @change="taxChanged">
+                                                <a-select-option v-for="tax in taxes" :key="tax.xid" :value="tax.xid"
+                                                    :tax="tax">
                                                     {{ tax.name }} ({{ tax.rate }}%)
                                                 </a-select-option>
                                             </a-select>
@@ -274,11 +187,8 @@
                                     <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
                                         <a-form-item :label="$t('stock.discount')">
                                             <a-input-group compact>
-                                                <a-select
-                                                    v-model:value="formData.discount_type"
-                                                    @change="recalculateFinalTotal"
-                                                    style="width: 30%"
-                                                >
+                                                <a-select v-model:value="formData.discount_type"
+                                                    @change="recalculateFinalTotal" style="width: 30%">
                                                     <a-select-option value="percentage">
                                                         %
                                                     </a-select-option>
@@ -286,37 +196,22 @@
                                                         {{ appSetting.currency.symbol }}
                                                     </a-select-option>
                                                 </a-select>
-                                                <a-input-number
-                                                    v-model:value="
-                                                        formData.discount_value
-                                                    "
-                                                    :placeholder="
-                                                        $t(
-                                                            'common.placeholder_default_text',
-                                                            [$t('stock.discount')]
-                                                        )
-                                                    "
-                                                    @change="recalculateFinalTotal"
-                                                    min="0"
-                                                    style="width: 70%"
-                                                />
+                                                <a-input-number v-model:value="formData.discount_value
+                                                    " :placeholder="$t(
+                                                        'common.placeholder_default_text',
+                                                        [$t('stock.discount')]
+                                                    )
+                                                        " @change="recalculateFinalTotal" min="0" style="width: 70%" />
                                             </a-input-group>
                                         </a-form-item>
                                     </a-col>
                                     <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
                                         <a-form-item :label="$t('stock.shipping')">
-                                            <a-input-number
-                                                v-model:value="formData.shipping"
-                                                :placeholder="
-                                                    $t(
-                                                        'common.placeholder_default_text',
-                                                        [$t('stock.shipping')]
-                                                    )
-                                                "
-                                                @change="recalculateFinalTotal"
-                                                min="0"
-                                                style="width: 100%"
-                                            >
+                                            <a-input-number v-model:value="formData.shipping" :placeholder="$t(
+                                                'common.placeholder_default_text',
+                                                [$t('stock.shipping')]
+                                            )
+                                                " @change="recalculateFinalTotal" min="0" style="width: 100%">
                                                 <template #addonBefore>
                                                     {{ appSetting.currency.symbol }}
                                                 </template>
@@ -326,41 +221,24 @@
                                 </a-row>
                             </div>
                         </a-card>
-                        <div
-                            :style="{
-                                right: 0,
-                                bottom: 20,
-                                width: '100%',
-                                padding: '10px 16px',
-                                background: '#fff',
-                                textAlign: 'right',
-                                zIndex: 1,
-                            }"
-                        >
+                        <div :style="{
+                            right: 0,
+                            bottom: 20,
+                            width: '100%',
+                            padding: '10px 16px',
+                            background: '#fff',
+                            textAlign: 'right',
+                            zIndex: 1,
+                        }">
                             <a-row :gutter="16">
                                 <a-col :xs="24" :sm="24" :md="10" :lg="10" :xl="10">
-                                    <a-row
-                                        :gutter="16"
-                                        :style="{ background: '#dbdbdb', padding: '5px' }"
-                                    >
-                                        <a-col
-                                            :xs="24"
-                                            :sm="24"
-                                            :md="12"
-                                            :lg="12"
-                                            :xl="12"
-                                        >
+                                    <a-row :gutter="16" :style="{ background: '#dbdbdb', padding: '5px' }">
+                                        <a-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                                             <span class="pos-grand-total">
                                                 {{ $t("stock.grand_total") }} :
                                             </span>
                                         </a-col>
-                                        <a-col
-                                            :xs="24"
-                                            :sm="24"
-                                            :md="12"
-                                            :lg="12"
-                                            :xl="12"
-                                        >
+                                        <a-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12">
                                             <span class="pos-grand-total">
                                                 {{
                                                     formatAmountCurrency(
@@ -371,14 +249,7 @@
                                         </a-col>
                                     </a-row>
                                 </a-col>
-                                <a-col
-                                    :xs="24"
-                                    :sm="24"
-                                    :md="6"
-                                    :lg="6"
-                                    :xl="6"
-                                    class="mt-10"
-                                >
+                                <a-col :xs="24" :sm="24" :md="6" :lg="6" :xl="6" class="mt-10">
                                     <small>
                                         {{ $t("product.tax") }} :
                                         {{ formatAmountCurrency(formData.tax_amount) }} |
@@ -388,16 +259,11 @@
                                 </a-col>
                                 <a-col :xs="24" :sm="24" :md="8" :lg="8" :xl="8">
                                     <a-space>
-                                        <a-button
-                                            type="primary"
-                                            @click="payNow"
-                                            :disabled="
-                                                formData.subtotal <= 0 ||
-                                                formData.user_id == undefined ||
-                                                formData.user_id == '' ||
-                                                !formData.user_id
-                                            "
-                                        >
+                                        <a-button type="primary" @click="payNow" :disabled="formData.subtotal <= 0 ||
+                                            formData.user_id == undefined ||
+                                            formData.user_id == '' ||
+                                            !formData.user_id
+                                            ">
                                             {{ $t("stock.pay_now") }}
                                         </a-button>
                                         <a-button @click="resetPos">
@@ -411,48 +277,26 @@
                 </div>
             </a-col>
             <a-col class="right-pos-sidebar" :xs="24" :sm="24" :md="24" :lg="14" :xl="14">
-                <perfect-scrollbar
-                    :options="{
-                        wheelSpeed: 1,
-                        swipeEasing: true,
-                        suppressScrollX: true,
-                    }"
-                >
-                    <PosLayout1
-                        v-if="postLayout == 1"
-                        :brands="brands"
-                        :categories="categories"
-                        :formData="formData"
-                        @changed="reFetchProducts"
-                    />
+                <perfect-scrollbar :options="{
+                    wheelSpeed: 1,
+                    swipeEasing: true,
+                    suppressScrollX: true,
+                }">
+                    <PosLayout1 v-if="postLayout == 1" :brands="brands" :categories="categories" :formData="formData"
+                        @changed="reFetchProducts" />
 
-                    <PosLayout2
-                        v-else
-                        :brands="brands"
-                        :categories="categories"
-                        :formData="formData"
-                        @changed="reFetchProducts"
-                    />
+                    <PosLayout2 v-else :brands="brands" :categories="categories" :formData="formData"
+                        @changed="reFetchProducts" />
 
                     <a-row v-if="productLists.length > 0" :gutter="30">
-                        <a-col
-                            v-for="item in productLists"
-                            :key="item.xid"
-                            :xxl="6"
-                            :lg="6"
-                            :md="12"
-                            :xs="24"
-                            @click="selectSaleProduct(item)"
-                        >
+                        <a-col v-for="item in productLists" :key="item.xid" :xxl="6" :lg="6" :md="12" :xs="24"
+                            @click="selectSaleProduct(item)">
                             <ProductCardNew :product="item" />
                         </a-col>
                     </a-row>
                     <a-row v-else>
                         <a-col :span="24">
-                            <a-result
-                                :title="$t('stock.no_product_found')"
-                                :style="{ marginTop: '20%' }"
-                            />
+                            <a-result :title="$t('stock.no_product_found')" :style="{ marginTop: '20%' }" />
                         </a-col>
                     </a-row>
                 </perfect-scrollbar>
@@ -462,59 +306,34 @@
         <a-row v-else :gutter="[8, 8]" class="mt-5" style="margin: 10px 16px 0">
             <a-col :span="24">
                 <span style="display: flex">
-                    <a-select
-                        :value="null"
-                        :searchValue="orderSearchTerm"
-                        show-search
-                        :filter-option="false"
-                        :placeholder="$t('product.search_scan_product')"
-                        style="width: 90%"
-                        :not-found-content="productFetching ? undefined : null"
-                        @search="
+                    <a-select :value="null" :searchValue="orderSearchTerm" show-search :filter-option="false"
+                        :placeholder="$t('product.search_scan_product')" style="width: 90%"
+                        :not-found-content="productFetching ? undefined : null" @search="
                             (searchedValue) => {
                                 orderSearchTerm = searchedValue;
                                 fetchProducts(searchedValue);
                             }
-                        "
-                        option-label-prop="label"
-                        @focus="products = []"
-                        @select="searchValueSelected"
-                        @inputKeyDown="inputValueChanged"
-                    >
+                        " option-label-prop="label" @focus="products = []" @select="searchValueSelected"
+                        @inputKeyDown="inputValueChanged">
                         <template #suffixIcon>
                             <SearchOutlined />
                         </template>
                         <template v-if="productFetching" #notFoundContent>
                             <a-spin size="small" />
                         </template>
-                        <a-select-option
-                            v-for="product in products"
-                            :key="product.xid"
-                            :value="product.xid"
-                            :label="product.name"
-                            :product="product"
-                        >
+                        <a-select-option v-for="product in products" :key="product.xid" :value="product.xid"
+                            :label="product.name" :product="product">
                             => {{ product.name }}
                         </a-select-option>
                     </a-select>
-                    <a-button
-                        v-if="showMobileCart"
-                        class="ml-5"
-                        style="width: 100%"
-                        @click="() => (showMobileCart = false)"
-                        type="primary"
-                    >
+                    <a-button v-if="showMobileCart" class="ml-5" style="width: 100%"
+                        @click="() => (showMobileCart = false)" type="primary">
                         <template #icon>
                             <ShoppingCartOutlined />
                         </template>
                     </a-button>
-                    <a-button
-                        v-else
-                        class="ml-5"
-                        style="width: 100%"
-                        @click="() => (showMobileCart = true)"
-                        type="primary"
-                    >
+                    <a-button v-else class="ml-5" style="width: 100%" @click="() => (showMobileCart = true)"
+                        type="primary">
                         <template #icon>
                             <UnorderedListOutlined />
                         </template>
@@ -525,37 +344,15 @@
             <a-col :span="24">
                 <div class="pos1-left-wrapper">
                     <div v-if="!showMobileCart" class="pos-left-header">
-                        <PosLayout1
-                            v-if="postLayout == 1"
-                            :brands="brands"
-                            :categories="categories"
-                            :formData="formData"
-                            @changed="reFetchProducts"
-                        />
-                        <PosLayout2
-                            v-else
-                            :brands="brands"
-                            :categories="categories"
-                            :formData="formData"
-                            @changed="reFetchProducts"
-                        />
+                        <PosLayout1 v-if="postLayout == 1" :brands="brands" :categories="categories"
+                            :formData="formData" @changed="reFetchProducts" />
+                        <PosLayout2 v-else :brands="brands" :categories="categories" :formData="formData"
+                            @changed="reFetchProducts" />
                     </div>
                     <div v-if="!showMobileCart" class="pos-left-content">
-                        <a-row
-                            v-if="productLists.length > 0"
-                            :gutter="30"
-                            class="pos1-products-lists"
-                        >
-                            <a-col
-                                v-for="item in productLists"
-                                :key="item.xid"
-                                :xxl="8"
-                                :lg="8"
-                                :md="8"
-                                :sm="12"
-                                :xs="12"
-                                @click="selectSaleProduct(item)"
-                            >
+                        <a-row v-if="productLists.length > 0" :gutter="30" class="pos1-products-lists">
+                            <a-col v-for="item in productLists" :key="item.xid" :xxl="8" :lg="8" :md="8" :sm="12"
+                                :xs="12" @click="selectSaleProduct(item)">
                                 <ProductCardNew :product="item" />
                             </a-col>
                         </a-row>
@@ -563,19 +360,12 @@
                     <div v-if="showMobileCart">
                         <a-row class="mt-5 mb-5">
                             <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                                <a-table
-                                    :row-key="(record) => record.xid"
-                                    :dataSource="selectedProducts"
-                                    :columns="orderItemColumns"
-                                    :pagination="false"
-                                    size="middle"
-                                >
+                                <a-table :row-key="(record) => record.xid" :dataSource="selectedProducts"
+                                    :columns="orderItemColumns" :pagination="false" size="middle">
                                     <template #bodyCell="{ column, record }">
                                         <template v-if="column.dataIndex === 'name'">
                                             {{ record.name }} <br />
-                                            <small
-                                                v-if="record.product_type != 'service'"
-                                            >
+                                            <small v-if="record.product_type != 'service'">
                                                 <a-typography-text code>
                                                     {{ $t("product.avl_qty") }}
                                                     {{
@@ -584,37 +374,25 @@
                                                 </a-typography-text>
                                             </small>
                                         </template>
-                                        <template
-                                            v-if="column.dataIndex === 'unit_quantity'"
-                                        >
-                                            <a-input-number
-                                                id="inputNumber"
-                                                v-model:value="record.quantity"
-                                                :min="0"
-                                                @change="quantityChanged(record)"
-                                            />
+                                        <template v-if="column.dataIndex === 'unit_quantity'">
+                                            <a-input-number id="inputNumber" v-model:value="record.quantity" :min="0"
+                                                @change="quantityChanged(record)" />
                                         </template>
                                         <template v-if="column.dataIndex === 'subtotal'">
                                             {{ formatAmountCurrency(record.subtotal) }}
                                         </template>
                                         <template v-if="column.dataIndex === 'action'">
-                                            <a-button
-                                                type="primary"
-                                                @click="editItem(record)"
-                                                style="margin-left: 4px; margin-top: 4px"
-                                            >
-                                                <template #icon
-                                                    ><EditOutlined
-                                                /></template>
+                                            <a-button type="primary" @click="editItem(record)"
+                                                style="margin-left: 4px; margin-top: 4px">
+                                                <template #icon>
+                                                    <EditOutlined />
+                                                </template>
                                             </a-button>
-                                            <a-button
-                                                type="primary"
-                                                @click="showDeleteConfirm(record)"
-                                                style="margin-left: 4px; margin-top: 4px"
-                                            >
-                                                <template #icon
-                                                    ><DeleteOutlined
-                                                /></template>
+                                            <a-button type="primary" @click="showDeleteConfirm(record)"
+                                                style="margin-left: 4px; margin-top: 4px">
+                                                <template #icon>
+                                                    <DeleteOutlined />
+                                                </template>
                                             </a-button>
                                         </template>
                                     </template>
@@ -628,23 +406,12 @@
                                 <a-row :gutter="[16]">
                                     <a-col :xs="24" :sm="24" :md="8" :lg="8">
                                         <a-form-item :label="$t('stock.order_tax')">
-                                            <a-select
-                                                v-model:value="formData.tax_id"
-                                                :placeholder="
-                                                    $t('common.select_default_text', [
-                                                        $t('stock.order_tax'),
-                                                    ])
-                                                "
-                                                :allowClear="true"
-                                                style="width: 100%"
-                                                @change="taxChanged"
-                                            >
-                                                <a-select-option
-                                                    v-for="tax in taxes"
-                                                    :key="tax.xid"
-                                                    :value="tax.xid"
-                                                    :tax="tax"
-                                                >
+                                            <a-select v-model:value="formData.tax_id" :placeholder="$t('common.select_default_text', [
+                                                $t('stock.order_tax'),
+                                            ])
+                                                " :allowClear="true" style="width: 100%" @change="taxChanged">
+                                                <a-select-option v-for="tax in taxes" :key="tax.xid" :value="tax.xid"
+                                                    :tax="tax">
                                                     {{ tax.name }} ({{ tax.rate }}%)
                                                 </a-select-option>
                                             </a-select>
@@ -653,11 +420,8 @@
                                     <a-col :xs="24" :sm="24" :md="8" :lg="8">
                                         <a-form-item :label="$t('stock.discount')">
                                             <a-input-group compact>
-                                                <a-select
-                                                    v-model:value="formData.discount_type"
-                                                    @change="recalculateFinalTotal"
-                                                    style="width: 30%"
-                                                >
+                                                <a-select v-model:value="formData.discount_type"
+                                                    @change="recalculateFinalTotal" style="width: 30%">
                                                     <a-select-option value="percentage">
                                                         %
                                                     </a-select-option>
@@ -665,37 +429,22 @@
                                                         {{ appSetting.currency.symbol }}
                                                     </a-select-option>
                                                 </a-select>
-                                                <a-input-number
-                                                    v-model:value="
-                                                        formData.discount_value
-                                                    "
-                                                    :placeholder="
-                                                        $t(
-                                                            'common.placeholder_default_text',
-                                                            [$t('stock.discount')]
-                                                        )
-                                                    "
-                                                    @change="recalculateFinalTotal"
-                                                    min="0"
-                                                    style="width: 70%"
-                                                />
+                                                <a-input-number v-model:value="formData.discount_value
+                                                    " :placeholder="$t(
+                                                        'common.placeholder_default_text',
+                                                        [$t('stock.discount')]
+                                                    )
+                                                        " @change="recalculateFinalTotal" min="0" style="width: 70%" />
                                             </a-input-group>
                                         </a-form-item>
                                     </a-col>
                                     <a-col :xs="24" :sm="24" :md="8" :lg="8">
                                         <a-form-item :label="$t('stock.shipping')">
-                                            <a-input-number
-                                                v-model:value="formData.shipping"
-                                                :placeholder="
-                                                    $t(
-                                                        'common.placeholder_default_text',
-                                                        [$t('stock.shipping')]
-                                                    )
-                                                "
-                                                @change="recalculateFinalTotal"
-                                                min="0"
-                                                style="width: 100%"
-                                            >
+                                            <a-input-number v-model:value="formData.shipping" :placeholder="$t(
+                                                'common.placeholder_default_text',
+                                                [$t('stock.shipping')]
+                                            )
+                                                " @change="recalculateFinalTotal" min="0" style="width: 100%">
                                                 <template #addonBefore>
                                                     {{ appSetting.currency.symbol }}
                                                 </template>
@@ -725,34 +474,21 @@
             </a-col>
             <a-col :span="14">
                 <a-space :style="{ marginTop: '5px' }">
-                    <a-button
-                        v-if="showMobileCart"
-                        @click="() => (showMobileCart = false)"
-                        type="primary"
-                    >
+                    <a-button v-if="showMobileCart" @click="() => (showMobileCart = false)" type="primary">
                         <template #icon>
                             <ShoppingCartOutlined />
                         </template>
                     </a-button>
-                    <a-button
-                        v-else
-                        @click="() => (showMobileCart = true)"
-                        type="primary"
-                    >
+                    <a-button v-else @click="() => (showMobileCart = true)" type="primary">
                         <template #icon>
                             <UnorderedListOutlined />
                         </template>
                     </a-button>
-                    <a-button
-                        type="primary"
-                        @click="payNow"
-                        :disabled="
-                            formData.subtotal <= 0 ||
-                            formData.user_id == undefined ||
-                            formData.user_id == '' ||
-                            !formData.user_id
-                        "
-                    >
+                    <a-button type="primary" @click="payNow" :disabled="formData.subtotal <= 0 ||
+                        formData.user_id == undefined ||
+                        formData.user_id == '' ||
+                        !formData.user_id
+                        ">
                         {{ $t("stock.pay_now") }}
                     </a-button>
                     <a-button @click="resetPos">
@@ -763,36 +499,18 @@
         </a-row>
     </div>
 
-    <a-modal
-        :open="addEditVisible"
-        :closable="false"
-        :centered="true"
-        :title="addEditPageTitle"
-        @ok="onAddEditSubmit"
-    >
+    <a-modal :open="addEditVisible" :closable="false" :centered="true" :title="addEditPageTitle" @ok="onAddEditSubmit">
         <a-form layout="vertical">
             <a-row :gutter="16">
                 <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                    <a-form-item
-                        :label="$t('product.unit_price')"
-                        name="unit_price"
-                        :help="
-                            addEditRules.unit_price
-                                ? addEditRules.unit_price.message
-                                : null
-                        "
-                        :validateStatus="addEditRules.unit_price ? 'error' : null"
-                    >
-                        <a-input-number
-                            v-model:value="addEditFormData.unit_price"
-                            :placeholder="
-                                $t('common.placeholder_default_text', [
-                                    $t('product.unit_price'),
-                                ])
-                            "
-                            min="0"
-                            style="width: 100%"
-                        >
+                    <a-form-item :label="$t('product.unit_price')" name="unit_price" :help="addEditRules.unit_price
+                        ? addEditRules.unit_price.message
+                        : null
+                        " :validateStatus="addEditRules.unit_price ? 'error' : null">
+                        <a-input-number v-model:value="addEditFormData.unit_price" :placeholder="$t('common.placeholder_default_text', [
+                            $t('product.unit_price'),
+                        ])
+                            " min="0" style="width: 100%">
                             <template #addonBefore>
                                 {{ appSetting.currency.symbol }}
                             </template>
@@ -802,26 +520,14 @@
             </a-row>
             <a-row :gutter="16">
                 <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                    <a-form-item
-                        :label="$t('product.discount')"
-                        name="discount_rate"
-                        :help="
-                            addEditRules.discount_rate
-                                ? addEditRules.discount_rate.message
-                                : null
-                        "
-                        :validateStatus="addEditRules.discount_rate ? 'error' : null"
-                    >
-                        <a-input-number
-                            v-model:value="addEditFormData.discount_rate"
-                            :placeholder="
-                                $t('common.placeholder_default_text', [
-                                    $t('product.discount'),
-                                ])
-                            "
-                            min="0"
-                            style="width: 100%"
-                        >
+                    <a-form-item :label="$t('product.discount')" name="discount_rate" :help="addEditRules.discount_rate
+                        ? addEditRules.discount_rate.message
+                        : null
+                        " :validateStatus="addEditRules.discount_rate ? 'error' : null">
+                        <a-input-number v-model:value="addEditFormData.discount_rate" :placeholder="$t('common.placeholder_default_text', [
+                            $t('product.discount'),
+                        ])
+                            " min="0" style="width: 100%">
                             <template #addonAfter>%</template>
                         </a-input-number>
                     </a-form-item>
@@ -829,24 +535,12 @@
             </a-row>
             <a-row :gutter="16">
                 <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                    <a-form-item
-                        :label="$t('product.tax')"
-                        name="tax_id"
+                    <a-form-item :label="$t('product.tax')" name="tax_id"
                         :help="addEditRules.tax_id ? addEditRules.tax_id.message : null"
-                        :validateStatus="addEditRules.tax_id ? 'error' : null"
-                    >
-                        <a-select
-                            v-model:value="addEditFormData.tax_id"
-                            :placeholder="
-                                $t('common.select_default_text', [$t('product.tax')])
-                            "
-                            :allowClear="true"
-                        >
-                            <a-select-option
-                                v-for="tax in taxes"
-                                :key="tax.xid"
-                                :value="tax.xid"
-                            >
+                        :validateStatus="addEditRules.tax_id ? 'error' : null">
+                        <a-select v-model:value="addEditFormData.tax_id" :placeholder="$t('common.select_default_text', [$t('product.tax')])
+                            " :allowClear="true">
+                            <a-select-option v-for="tax in taxes" :key="tax.xid" :value="tax.xid">
                                 {{ tax.name }} ({{ tax.rate }}%)
                             </a-select-option>
                         </a-select>
@@ -855,26 +549,11 @@
             </a-row>
             <a-row :gutter="16">
                 <a-col :xs="24" :sm="24" :md="24" :lg="24">
-                    <a-form-item
-                        :label="$t('product.tax_type')"
-                        name="tax_type"
-                        :help="
-                            addEditRules.tax_type ? addEditRules.tax_type.message : null
-                        "
-                        :validateStatus="addEditRules.tax_type ? 'error' : null"
-                    >
-                        <a-select
-                            v-model:value="addEditFormData.tax_type"
-                            :placeholder="
-                                $t('common.select_default_text', [$t('product.tax_type')])
-                            "
-                            :allowClear="true"
-                        >
-                            <a-select-option
-                                v-for="taxType in taxTypes"
-                                :key="taxType.key"
-                                :value="taxType.key"
-                            >
+                    <a-form-item :label="$t('product.tax_type')" name="tax_type" :help="addEditRules.tax_type ? addEditRules.tax_type.message : null
+                        " :validateStatus="addEditRules.tax_type ? 'error' : null">
+                        <a-select v-model:value="addEditFormData.tax_type" :placeholder="$t('common.select_default_text', [$t('product.tax_type')])
+                            " :allowClear="true">
+                            <a-select-option v-for="taxType in taxTypes" :key="taxType.key" :value="taxType.key">
                                 {{ taxType.value }}
                             </a-select-option>
                         </a-select>
@@ -883,12 +562,7 @@
             </a-row>
         </a-form>
         <template #footer>
-            <a-button
-                key="submit"
-                type="primary"
-                :loading="addEditFormSubmitting"
-                @click="onAddEditSubmit"
-            >
+            <a-button key="submit" type="primary" :loading="addEditFormSubmitting" @click="onAddEditSubmit">
                 <template #icon>
                     <SaveOutlined />
                 </template>
@@ -900,23 +574,15 @@
         </template>
     </a-modal>
 
-    <PayNow
-        :visible="payNowVisible"
-        @closed="payNowClosed"
-        @success="payNowSuccess"
-        :data="formData"
-        :selectedProducts="selectedProducts"
-    />
+    <PayNow :visible="payNowVisible" @closed="payNowClosed" @success="payNowSuccess" :data="formData"
+        :selectedProducts="selectedProducts" />
 
-    <InvoiceModal
-        :visible="printInvoiceModalVisible"
-        :order="printInvoiceOrder"
-        @closed="printInvoiceModalVisible = false"
-    />
+    <InvoiceModal :visible="printInvoiceModalVisible" :order="printInvoiceOrder"
+        @closed="printInvoiceModalVisible = false" />
 </template>
 
 <script>
-import { ref, onMounted, reactive, toRefs, nextTick } from "vue";
+import { ref, onMounted, onBeforeUnmount,reactive, toRefs, nextTick, h } from "vue";
 import {
     ShoppingCartOutlined,
     PlusOutlined,
@@ -926,6 +592,8 @@ import {
     SaveOutlined,
     SettingOutlined,
     UnorderedListOutlined,
+    FullscreenOutlined,
+    FullscreenExitOutlined,
 } from "@ant-design/icons-vue";
 import { debounce } from "lodash-es";
 import { useI18n } from "vue-i18n";
@@ -1008,9 +676,26 @@ export default {
         // For mobile Design
         const showMobileCart = ref(false);
 
+        // Fullscreen functionality
+        const isFullscreen = ref(false);
+
         onMounted(() => {
             getPreFetchData();
+            isFullscreen.value = false
+
+            // Listen for fullscreen change events
+            // document.addEventListener('fullscreenchange', handleFullscreenChange);
+            // document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+            // document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+            // document.addEventListener('MSFullscreenChange', handleFullscreenChange);
         });
+        onBeforeUnmount(() => {
+            // document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            // document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+            // document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+            // document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+        });
+
 
         const reFetchProducts = () => {
             axiosAdmin
@@ -1421,6 +1106,43 @@ export default {
             inputValueChanged,
 
             showMobileCart,
+
+            // Fullscreen functionality
+            isFullscreen,
+            toggleFullscreen: () => {
+
+
+                if (!document.fullscreenElement) {
+                    isFullscreen.value = true;
+                    // Enter fullscreen
+                    if (document.documentElement.requestFullscreen) {
+                        document.documentElement.requestFullscreen();
+                    } else if (document.documentElement.webkitRequestFullscreen) {
+                        document.documentElement.webkitRequestFullscreen();
+                    } else if (document.documentElement.mozRequestFullScreen) {
+                        document.documentElement.mozRequestFullScreen();
+                    } else if (document.documentElement.msRequestFullscreen) {
+                        document.documentElement.msRequestFullscreen();
+                    }
+                } else {
+                    isFullscreen.value = false;
+                    // Exit fullscreen
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        document.webkitExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        document.mozCancelFullScreen();
+                    } else if (document.msExitFullscreen) {
+                        document.msExitFullscreen();
+                    }
+                }
+
+
+            },
+            handleFullscreenChange: () => {
+                isFullscreen.value = !!document.fullscreenElement;
+            },
         };
     },
 };
