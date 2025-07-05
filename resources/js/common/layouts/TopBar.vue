@@ -1,13 +1,6 @@
 <template>
    <a-layout-header
-  :style="{
-    padding: '0 16px',
-    background: 'white',
-    display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    overflowX: 'auto',
-  }"
+  class="custom-header"
 >
   <a-row style="width: 100%" align="middle" justify="space-between">
     <!-- Left (Menu icon) -->
@@ -22,7 +15,7 @@
       <HeaderRightIcons>
         <a-space wrap>
           <!-- App Module Icons (Desktop only) -->
-          <template v-if="innerWidth > 768">
+          <template v-if="innerWidth > 0">
             <component
               v-for="(appModule, index) in appModules"
               :key="index"
@@ -31,12 +24,12 @@
           </template>
 
           <!-- Static topbar icon (Desktop only) -->
-          <TopbarIconVue v-if="innerWidth > 768" />
+          <TopbarIconVue v-if="innerWidth > 0" />
 
           <!-- POS Button -->
           <template
             v-if="
-              innerWidth > 768 &&
+              innerWidth > 0 &&
               (permsArray.includes('pos_view') || permsArray.includes('admin')) &&
               willSubscriptionModuleVisible('pos')
             "
@@ -214,5 +207,21 @@ export default {
 
 .trigger:hover {
     color: #1890ff;
+}
+
+.custom-header {
+  padding: 0 16px !important;
+  background: white !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  overflow-x: auto !important;
+}
+
+/* Apply height only on small screens */
+@media (max-width: 768px) {
+  .custom-header {
+    height: 250px !important;
+  }
 }
 </style>
