@@ -101,4 +101,10 @@ export default defineComponent({
 .setting-sidebar .ps {
     height: calc(100vh - 145px);
 }
+
+@media (max-width: 768px) {
+.setting-sidebar .ps {
+    height: auto;
+}
+}
 </style>
